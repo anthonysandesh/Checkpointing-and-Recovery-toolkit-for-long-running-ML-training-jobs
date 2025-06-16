@@ -1,0 +1,86 @@
+{
+  "title": "Checkpoint Health",
+  "schemaVersion": 36,
+  "tags": ["ckptkit"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Last Success Age (minutes)",
+      "id": 1,
+      "options": {"reduceOptions": {"calcs": ["last"]}},
+      "targets": [
+        {
+          "expr": "(time() - checkpoint_last_success_timestamp) / 60",
+          "legendFormat": "age_minutes"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Last Success Step",
+      "id": 2,
+      "targets": [
+        {"expr": "checkpoint_last_success_step", "legendFormat": "step"}
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Validation Failures",
+      "id": 3,
+      "targets": [
+        {
+          "expr": "rate(checkpoint_validation_failures_total[5m])",
+          "legendFormat": "{{reason}}"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Checkpoint Duration p50/p95",
+      "id": 4,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(checkpoint_last_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(checkpoint_last_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Disk Free (GB)",
+      "id": 5,
+      "targets": [
+        {
+          "expr": "checkpoint_directory_free_bytes / 1024 / 1024 / 1024",
+          "legendFormat": "free_gb"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Corrupt Checkpoints Detected",
+      "id": 6,
+      "targets": [
+        {
+          "expr": "checkpoint_corrupt_detected",
+          "legendFormat": "{{checkpoint}}"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Resume Selected Step",
+      "id": 7,
+      "targets": [
+        {"expr": "checkpoint_resume_selected_step", "legendFormat": "resume_step"}
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "editable": true
+}
