@@ -2,6 +2,9 @@
 
 Production-grade checkpoint writer, validator, and recovery utilities for long-running ML training jobs (PyTorch, DeepSpeed, etc.). Provides atomic checkpoint creation with manifests, corruption detection, resume planning, Prometheus metrics, and ready-to-import Grafana dashboards.
 
+![Architecture Diagram](checkpointing.jpeg)
+
+
 ## Quickstart
 
 ```bash
